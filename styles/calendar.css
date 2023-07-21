@@ -1,13 +1,58 @@
+/* cbs sports colors
+dark blue: #01426A
+bright blue: #0043d6
+white: #FAFCFE
+
+ */
+
 .rbc-label {
     color: #70757a;
     font-size: 10px;
 }
 
-.rbc-event-label {
+.rbc-event-content {
+    font-size: 12px;
+}
+
+/* .rbc-event-label {
     font-size: 10px;
-    width: 100%;
+    flex: 1 1 0 !important;
+    height: 100%;
 }
 
 .rbc-event-content {
     font-size: 12px;
+    width: 100%;
+    text-overflow: ellipsis;
+    height: unset !important;
+    min-height: unset !important;
+    flex: none !important;
+
 }
+
+.rbc-event {
+    flex-flow: column-reverse !important;
+} */
+
+.rbc-event-label {
+    display: none;
+}
+
+/* .rbc-time-header[style] {
+    margin-right: 0px !important;
+} */
+
+.main-blue { 
+    color: #0043d6 !important;
+}
+
+.rbc-toolbar-label {
+    text-align: unset !important;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.rbc-btn-group {
+    padding: 0 20px 0 40px;
+}
+
