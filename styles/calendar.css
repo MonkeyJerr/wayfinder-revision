@@ -56,3 +56,12 @@ white: #FAFCFE
     padding: 0 20px 0 40px;
 }
 
+@keyframes shimmer {
+    0% {
+        background-position: -1200px 0;
+    }
+    100% {
+        background-position: 1200px 0;
+    }
+}
+

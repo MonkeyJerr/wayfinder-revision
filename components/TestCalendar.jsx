@@ -13,14 +13,19 @@ import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import { Tab, Tabs } from "@mui/material";
 
+import Image from 'next/image';
+
+
+
 
 
 const localizer = momentLocalizer(moment);
 
 
 export default function TestCalendar({channelId}) {
-const scheduleManager = useScheduleManager(channelId);
-const drawerManager = useDrawerManager(scheduleManager.range);
+  const [isImageLoading, setImageLoading] = useState(true);
+  const scheduleManager = useScheduleManager(channelId);
+  const drawerManager = useDrawerManager({setImageLoading});
 
 const [currentTabIndex, setCurrentTabIndex] = useState(0);
  
@@ -80,21 +85,47 @@ const formats = useMemo(() => {
 
   const eventStyleGetter = useCallback((event, start, end, isSelected) => {
 
+    let style = {
+      borderRadius: "6px",
+      color: "white",
+      border: "1px solid",
+      borderColor: "#01426A"
+    };
 
     let backgroundColor = "";
     let opacity = 0;
-    if (isSelected) {
-        backgroundColor = "white";
-        opacity = 1;
-    }
     // if the event is currently going on, it will be highlighted
-    else if ((moment(start).unix() <= moment().unix()) && (moment().unix() <= moment(end).unix())) {
-        backgroundColor = "#0043d6";
-        opacity = 1;
+
+    let loadingStyle = ""
+    if (scheduleManager.isLoading) {
+      style = {
+        // takes all of the keys in the object and applies it to the new object
+        // for unpacking objects
+        ...style,
+        opacity: 1,
+        color: "black",
+        animationDuration: "2.2s",
+        animationFillMode: "forwards",
+        animationIterationCount: "infinite",
+        animationName: "shimmer",
+        animationTimingFunction: "linear",
+        background: "linear-gradient(to right, #D8D8D8 8%, #CFCFCF 18%, #C8C8C8 33%)",
+        backgroundSize: "1200px 100%"
+      }
+      loadingStyle = "loadingStyle"
+      
+      // style.backgroundColor = "#818181"
+      // style.opacity = 1;
     }
     else {
-        backgroundColor = "#0043d6";
-        opacity = 0.7;
+      if ((moment(start).unix() <= moment().unix()) && (moment().unix() <= moment(end).unix())) {
+          style.backgroundColor = "#0043d6";
+          style.opacity = 1;
+      }
+      else {
+          style.backgroundColor = "#0043d6";
+         style.opacity = 0.7;
+      }
     }
 
     let selectedClassName = "";
@@ -102,20 +133,13 @@ const formats = useMemo(() => {
       selectedClassName = "bigCalendarSelectedEvent";
     }
 
-    const style = {
-      backgroundColor: backgroundColor,
-      borderRadius: "6px",
-      opacity: opacity,
-      color: "white",
-      border: "1px solid",
-      borderColor: "#01426A",
-    };
+
 
     return {
-      className: selectedClassName,
+      className: selectedClassName, loadingStyle,
       style: style,
     };
-  }, []);
+  }, [scheduleManager.isLoading]);
 
   return (
     <div>
@@ -139,12 +163,13 @@ const formats = useMemo(() => {
             PaperProps={{
                 sx: { 
                     maxWidth: "50%",
-                    p: "2.5em"
+                    p: "2.5em",
+                    minWidth: "50%"
                 },
               }}>
-            <Typography className="font-bold text-4xl">
+            <div className="font-bold text-4xl">
                 {drawerManager.title}
-            </Typography>
+            </div>
             <br/>
             <Tabs 
                 value={currentTabIndex} 
@@ -187,12 +212,25 @@ const formats = useMemo(() => {
                         <Typography>{drawerManager.endTime}</Typography>
                     </Grid>
                 </Grid>
-
-                {drawerManager.image16x9 && 
+                
+                {drawerManager.image16x9 &&
                 <div>
                     <Divider textAlign="center" className="text-gray-400 text-lg pt-8" component="div" sx={{ borderTopWidth: "50px" }}>16x9 Thumbnail</Divider>
                         <br/>
-                        <div><img src={drawerManager.image16x9}/></div>
+                        <div>
+                          {/* <Image
+                              style={{
+                                display: imageLoad ? "block": "none"
+                              }}
+                              onLoad = {() => setImageLoading(false)}
+                              className = {isImageLoading ? `block` : `hidden`}
+                              src={drawerManager.image16x9}
+                              width={250}
+                              height={250}
+                              alt={"16x9 Image"}
+                            /> */}
+                            <img src={drawerManager.image16x9}/>
+                          </div>
                 </div>
                 }
 

@@ -1,15 +1,18 @@
 import { useEffect, useCallback, useRef, useState } from "react";
 import moment from "moment";
 import {buildThumbnailsByEventIdNonRepeat, buildThumbnailsByEventIdRepeat} from "../apiCalls/apiEndpoints.jsx"
+import {baseURL} from '../app/constants'
 
 
 //pass in open or not
-export function useDrawerManager(range) {
+export function useDrawerManager({setImageLoading}) {
     const [isOpen, setIsOpen] = useState(false);
     const [title, setTitle] = useState();
     const [description, setDescription] = useState();
     const [startTime, setStartTime] = useState();
     const [endTime, setEndTime] = useState();
+    // const [showImage, setShowImage] = useState(false);
+
 
 
     // create an object for all the images
@@ -43,14 +46,20 @@ export function useDrawerManager(range) {
         setStartTime(moment(event.start).format('dddd, MM/DD/YYYY, h:mm a'));
         setEndTime(moment(event.end).format('dddd, MM/DD/YYYY, h:mm a'));
         let images;
+        // wipe the old data
+        setImage16x5(null);
+        setImage16x9(null);
+        setImage4x3(null);
+        setImage3x4(null);
+        setImage2x1(null);
+        setImage1x1(null);
         // get the thumbnails for selected event
         if (event.repeating) {
-            images = buildThumbnailsByEventIdRepeat(event.id, Math.floor(event.start.getTime())/1000, Math.floor(event.end.getTime())/1000);
-            console.log(images);
+            images = buildThumbnailsByEventIdRepeat(baseURL, event.id, Math.floor(event.start.getTime())/1000, Math.floor(event.end.getTime())/1000);        
         }
 
         else {
-            images = buildThumbnailsByEventIdNonRepeat(event.id);
+            images = buildThumbnailsByEventIdNonRepeat(baseURL, event.id);
 
         }
 
@@ -64,7 +73,6 @@ export function useDrawerManager(range) {
                 setImage3x4(data.image3x4);
                 setImage2x1(data.image2x1);
                 setImage1x1(data.image1x1);
-
                 setEpisodeTitle(data.episode.title);
                 setEpisodeDesc(data.episode.description);
 
@@ -75,6 +83,7 @@ export function useDrawerManager(range) {
     
     const isClosed = useCallback((event, reason) => {
         setIsOpen(false);
+
       }, []); 
 
     return {

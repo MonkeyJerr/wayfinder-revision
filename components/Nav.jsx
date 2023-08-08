@@ -25,6 +25,8 @@ import HighQualityIcon from '@mui/icons-material/HighQuality';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
+import {baseURL} from '../app/constants'
+
 
 
 
@@ -36,7 +38,7 @@ const Nav = ({onChannelChange}) => {
     const [mainTitle, setMainTitle] = useState("CBS Sports HQ");
     // const scheduleManager = useScheduleManager(channelId);
     async function getChannels() {
-        let url = buildChannels();
+        let url = buildChannels(baseURL);
         // fetch(url).then((response) => {
         //     response.json()
         // })
